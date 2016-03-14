@@ -1,0 +1,12 @@
+Authors: Hao Peng, Tao Jiang
+
+How to run the program:
+   go under Build directory
+   ~/scons/bin/scons-2.4.1
+   bin/bPlusUnitTest
+   4 or 8
+   
+How to measure run time of this program:
+   make sure you installed time command
+   after compiling the program, use “time bin/bPlusUnitTest” to see the time
+

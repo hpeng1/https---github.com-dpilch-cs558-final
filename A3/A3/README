@@ -1,0 +1,9 @@
+Authors: Hao Peng, Tao Jiang
+
+How to run the program:
+1. Go into Build directory and run “~/scons/bin/scons-2.4.1” to compile.
+2. If you test on clear, please choose “6. Sort unit tests for Clear (use clang++ compiler)” to compile.
+3. Then use “bin/sortUnitTest” to run the program.
+
+
+

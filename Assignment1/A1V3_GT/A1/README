@@ -1,0 +1,8 @@
+Authors: Hao Peng, Tao Jiang
+
+How to run the program:
+1. go to Build directory and run “~/scons/bin/scons-2.4.1” to compile.
+2. then use “bin/bufferUnitTest” to run the program.
+3. you can delete all content in “foobar” and “barfoo” and run again to check the result. But please don’t delete the file, otherwise the program won’t find the file and exit.
+
+
