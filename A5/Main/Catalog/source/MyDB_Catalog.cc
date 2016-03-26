@@ -60,7 +60,10 @@ bool MyDB_Catalog :: getInt (string key, int &value) {
 
 	// verify the entry is in the map
 	if (myData.count (key) == 0)
+	{
+		cout<<"key can't be find in catalog!"<<endl;
 		return false;
+	}	
 
 	// it is, so convert it to an int
 	string :: size_type sz;
@@ -69,6 +72,7 @@ bool MyDB_Catalog :: getInt (string key, int &value) {
 
 	// exception means that we could not convert
 	} catch (...) {
+		cout<<"can not convert to int!"<<endl;
 		return false;
 	}
 	
@@ -123,7 +127,7 @@ void MyDB_Catalog :: add_to_list(string s1, string s2)
 
 int MyDB_Catalog :: on_list(string s)
 {
-	bool result = -1;
+	int result = -1;
 	for(int i=0; i < table_name_list.size(); i++)
 	{
 		if(table_name_list[i].first.compare(s) == 0 || table_name_list[i].second.compare(s) == 0)

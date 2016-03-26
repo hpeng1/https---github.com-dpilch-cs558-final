@@ -262,11 +262,10 @@ public:
 	}
 
 	bool validate(MyDB_CatalogPtr mycatalog){
-		//cout<<"Query not valid"<<endl;
-		//cout<<"Query validated"<<endl;
+		
 		bool result = true;
-		string error_message;
 
+		/* validating table names */
 		cout<<"validating tables...."<<endl;
 		for (auto a : tablesToProcess) 
 		{
@@ -285,7 +284,32 @@ public:
 		}
 		// see if all table names (including the abbreviations) are recorded
 		mycatalog->traverse_name_list();
-		cout<<mycatalog->get_abbrev("nation")<<endl;
+		//cout<<mycatalog->get_abbrev("nation")<<endl;
+		/* validating table names */
+
+		/* validating attributes */
+		
+		cout<<"validating disjunctions... "<<allDisjunctions.size()<<endl;
+		for (auto b : allDisjunctions) 
+		{
+			//cout<<b->toString()<<endl;
+			if( !b->validate_tree(mycatalog))
+			{
+				cout<<"Error: disjunction not valid"<<endl;
+				result = false;
+				break;
+			}
+			;
+		}
+		
+		string type;
+		string att = "customer.c_custkey.type";
+		if(mycatalog->getString(att, type) == false)
+			cout<<"no attribute found: "<<att<<endl;
+		else
+			cout<<att<<" tpye: "<<type<<endl;
+		/* validating attributes */
+
 		return result;
 	}
 

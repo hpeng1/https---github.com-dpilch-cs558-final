@@ -2,6 +2,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "ParserTypes.h"
+#include "ExprTree.h"
 #include <string>      
 #include <iostream>   
 #include <sstream>
@@ -97,11 +98,13 @@ int main (int numArgs, char **args) {
 						// validate the SFW Query
 						cout<<"Semantic test......"<<endl;
 						if(final->Semantic_test(myCatalog))
+						{
 							cout<<"Semantic test passsed!"<<endl;
+							//cout<<myCatalog->on_list("z")<<endl;
+						}	
 						else
 						{
 							cout<<"Semantic test failed"<<endl;
-							cout<<"error message: "<<endl;
 						}
 						
 					}
