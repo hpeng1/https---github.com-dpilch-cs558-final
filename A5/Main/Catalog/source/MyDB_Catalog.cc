@@ -120,8 +120,24 @@ MyDB_Catalog :: ~MyDB_Catalog () {
 
 void MyDB_Catalog :: add_to_list(string s1, string s2)
 {
-
 	table_name_list.push_back(make_pair(s1,s2));
+	return;
+}
+
+void MyDB_Catalog :: add_to_grouping_list(string s1, string s2)
+{
+	grouping_list.push_back(make_pair(s1,s2));
+	return;
+}
+
+void MyDB_Catalog :: traverse_group_list()
+{
+	cout<<"traverse group list: ";
+	for(int i=0; i < grouping_list.size(); i++)
+	{
+		cout<<"<"<<grouping_list[i].first<<","<<grouping_list[i].second<<">";
+	}
+	cout<<""<<endl;
 	return;
 }
 
@@ -136,6 +152,21 @@ int MyDB_Catalog :: on_list(string s)
 	return result;
 }
 
+int MyDB_Catalog :: on_grouping_list(string table, string attribute)
+{
+	int result = -1;
+	string table_fullname = get_full_name(table);
+	for(int i=0; i < grouping_list.size(); i++)
+	{
+		if(grouping_list[i].first.compare(table) == 0 && grouping_list[i].second.compare(attribute) == 0)
+			return i;
+		if(grouping_list[i].first.compare(table_fullname) == 0 && grouping_list[i].second.compare(attribute) == 0)
+			return i;
+
+	}
+	return result;
+}
+
 string MyDB_Catalog :: get_abbrev(string s)
 {
 	for(int i=0; i < table_name_list.size(); i++)
@@ -143,8 +174,8 @@ string MyDB_Catalog :: get_abbrev(string s)
 		if(table_name_list[i].first.compare(s) == 0)
 			return table_name_list[i].second;
 	}
-	cout<<"table "<<s<< " doesn't exist"<<endl;
-	return nullptr;
+	//cout<<"table "<<s<< " doesn't exist"<<endl;
+	return "Not_found";
 }
 
 string MyDB_Catalog :: get_full_name(string s)
@@ -154,8 +185,22 @@ string MyDB_Catalog :: get_full_name(string s)
 		if(table_name_list[i].second.compare(s) == 0)
 			return table_name_list[i].first;
 	}
-	cout<<"table "<<s<< " doesn't exist"<<endl;
-	return nullptr;
+	//cout<<"table "<<s<< " doesn't exist"<<endl;
+	return "Not_found";
+}
+
+string MyDB_Catalog :: get_attribute(string table_name, string attribute)
+{
+	string type;
+	string findme = table_name+"."+attribute+".type";
+	string or_findme = get_full_name(table_name)+"."+attribute+".type";
+	if( (getString(or_findme, type) == false) && (getString(findme, type) == false) )
+	{
+		cout<<"attribute "<<attribute<<" in table "<<table_name<<" not found"<<endl;
+		return "NotFound";
+	}
+	else
+		return type;
 }
 
 void MyDB_Catalog :: traverse_name_list()
@@ -177,6 +222,34 @@ void MyDB_Catalog :: save () {
 			myFile << "|" << ent.first << "|" << ent.second << "|\n";
 		}
 	}
+}
+
+void MyDB_Catalog :: clean_table_list () {
+	table_name_list.clear();
+	return;
+}
+
+void MyDB_Catalog :: clean_group_list () {
+	grouping_list.clear();
+	return;
+}
+
+//// getTableName  function
+string MyDB_Catalog :: getTableName(string input_type)
+{
+	string tableName;
+	string table_abrev = "a";
+	table_abrev[0] = input_type[1];
+	tableName =get_full_name(table_abrev);
+	return tableName;
+}
+
+//// getAttName  function
+string MyDB_Catalog :: getAttName(string input_type)
+{
+	std::size_t pos = input_type.find("]"); 
+	std::string attName = input_type.substr (3,pos-3);
+	return attName;
 }
 
 #endif

@@ -265,8 +265,8 @@ public:
 		
 		bool result = true;
 
-		/* validating table names */
-		cout<<"validating tables...."<<endl;
+/* validating table names */
+		cout<<"validating tables...."<<tablesToProcess.size()<<" clauses"<<endl;
 		for (auto a : tablesToProcess) 
 		{
 			if(!is_in_catalog(a.first, mycatalog))
@@ -283,13 +283,12 @@ public:
 			}	
 		}
 		// see if all table names (including the abbreviations) are recorded
-		mycatalog->traverse_name_list();
+		//mycatalog->traverse_name_list();
 		//cout<<mycatalog->get_abbrev("nation")<<endl;
-		/* validating table names */
+/* validating table names */
 
-		/* validating attributes */
-		
-		cout<<"validating disjunctions... "<<allDisjunctions.size()<<endl;
+/* validating table attributes*/
+		cout<<"validating disjunctions... "<<allDisjunctions.size()<<" clauses"<<endl;
 		for (auto b : allDisjunctions) 
 		{
 			//cout<<b->toString()<<endl;
@@ -299,17 +298,58 @@ public:
 				result = false;
 				break;
 			}
-			;
-		}
-		
-		string type;
-		string att = "customer.c_custkey.type";
-		if(mycatalog->getString(att, type) == false)
-			cout<<"no attribute found: "<<att<<endl;
-		else
-			cout<<att<<" tpye: "<<type<<endl;
-		/* validating attributes */
+			if( b->type_check(mycatalog).compare("No") == 0)
+			{
+				cout<<"Error: tpye mismatch, disjunction not valid"<<endl;
+				result = false;
+				break;
+			}
 
+		}
+/*validating tables attributes*/
+
+/* validating grouping clause*/
+		cout<<"validating groupings... "<<groupingClauses.size()<<" clauses"<<endl;
+		for (auto c : groupingClauses)
+		{
+			if(!c->validate_tree(mycatalog))
+			{
+				cout<<"Error: grouping not valid"<<endl;
+				result = false;
+				break;
+			}
+			else
+			{
+				//table is in the catalog, add this clause to grouping list
+				// TODO: I know c is a identifer class, get its table name and attribute name
+				mycatalog->add_to_grouping_list(mycatalog->getTableName(c->toString()),mycatalog->getAttName(c->toString()));
+			}
+		}
+
+		// use mycatalog->grouping list to back check the SELECT clause
+		if(groupingClauses.size()!=0)
+		{
+			//mycatalog->traverse_group_list();
+			//traverse the SELECT clause, see if there is violation
+			for (auto s : valuesToSelect)
+			{
+				if(!s->in_group_clause(mycatalog))
+				{
+					cout<<"Error: grouping in SELECT clause not valid"<<endl;
+					result = false;
+					break;
+				}
+			}
+		}
+/* validating grouping clause*/
+
+/* type checking */
+
+
+/* type checking*/
+
+		mycatalog->clean_table_list();
+		mycatalog->clean_group_list();
 		return result;
 	}
 

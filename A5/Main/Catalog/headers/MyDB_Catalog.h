@@ -54,6 +54,7 @@ public:
 	// saves any updates to the catalog
 	void save ();
 
+	//table list related
 	void add_to_list(string,string);
 
 	int on_list(string);
@@ -64,12 +65,34 @@ public:
 
 	string get_full_name(string);
 
+	string get_attribute(string,string);
+
+	void clean_table_list();
+
+	//grouping list related
+	void add_to_grouping_list(string,string);//done
+
+	int on_grouping_list(string,string); //done
+
+	void traverse_group_list();	//done
+
+	void clean_group_list();
+
+	//helper functions from Tao
+	string getTableName(string);
+
+	string getAttName(string);
+
 
 private:
 
 // the first string is the original table name
 // the second string is the abbrev table name
 	vector <pair <string, string>> table_name_list;
+
+// the first string is the table name
+// the second string is the table attribute
+	vector <pair <string, string>> grouping_list;
 
 	// the name of the catalog file
 	string fName;
